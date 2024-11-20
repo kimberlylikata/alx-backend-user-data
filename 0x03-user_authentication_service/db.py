@@ -2,17 +2,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from user import User  # Assuming User class is in the user.py file
 
-from user import User  # Ensure User model is imported
+Base = declarative_base()
 
 class DB:
-    """DB class that manages the database connection and user operations."""
-
+    """DB class for interacting with the database."""
+    
     def __init__(self) -> None:
         """Initialize a new DB instance."""
         self._engine = create_engine("sqlite:///a.db", echo=True)
-        Base.metadata.drop_all(self._engine)  # Drop any existing tables
-        Base.metadata.create_all(self._engine)  # Create tables
+        Base.metadata.create_all(self._engine)  # Ensure the tables are created
         self.__session = None
 
     @property
@@ -24,8 +24,9 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """Add a new user to the database and return the User object."""
-        new_user = User(email=email, hashed_password=hashed_password)
-        self._session.add(new_user)
-        self._session.commit()  # Save the new user to the database
-        return new_user
+        """Add a new user to the database."""
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
+        self._session.commit()
+        print(f"User {email} added with ID {user.id}")  # Log output for debugging
+        return user

@@ -3,23 +3,15 @@
 Main file to test the User model and interact with the database.
 """
 
+from db import DB
 from user import User
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-# Setup the database engine (for testing, use SQLite in-memory database)
-engine = create_engine('sqlite:///:memory:', echo=True)
+# Initialize DB instance
+my_db = DB()
 
-# Create all tables (create the users table in this case)
-User.metadata.create_all(engine)
+# Add users and print their IDs
+user_1 = my_db.add_user("test@test.com", "SuperHashedPwd")
+print(f"User 1 ID: {user_1.id}")  # Output ID of the first user
 
-# Create a session to interact with the database
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# Print the table name
-print(User.__tablename__)
-
-# Print column names and types
-for column in User.__table__.columns:
-    print("{}: {}".format(column, column.type))
+user_2 = my_db.add_user("test1@test.com", "SuperHashedPwd1")
+print(f"User 2 ID: {user_2.id}")  # Output ID of the second user
