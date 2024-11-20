@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 """
-Main file to test the User model and interact with the database.
+Main file
 """
-
 from db import DB
 from user import User
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
-# Initialize DB instance
 my_db = DB()
 
-# Add users and print their IDs
-user_1 = my_db.add_user("test@test.com", "SuperHashedPwd")
-print(f"User 1 ID: {user_1.id}")  # Output ID of the first user
+user = my_db.add_user("test@test.com", "PwdHashed")
+print(user.id)
 
-user_2 = my_db.add_user("test1@test.com", "SuperHashedPwd1")
-print(f"User 2 ID: {user_2.id}")  # Output ID of the second user
+find_user = my_db.find_user_by(email="test@test.com")
+print(find_user.id)
+
+try:
+    find_user = my_db.find_user_by(email="test2@test.com")
+    print(find_user.id)
+except NoResultFound:
+    print("Not found")
+
+try:
+    find_user = my_db.find_user_by(no_email="test@test.com")
+    print(find_user.id)
+except InvalidRequestError:
+    print("Invalid")
