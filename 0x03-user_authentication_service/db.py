@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
